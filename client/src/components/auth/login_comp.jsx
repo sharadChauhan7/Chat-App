@@ -1,6 +1,10 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-function login_comp({toggleAuth}) {
+import {useInputValidation,useStrongPassword} from '6pp'
+import {phoneValidator} from '../../util/validators'
+import { Typography } from '@mui/material';
+function Login_comp({toggleAuth}) {
+  const password = useStrongPassword();
+  const phoneNumber = useInputValidation("",phoneValidator);
   return (
     // Login form goes here
     <>
@@ -8,10 +12,12 @@ function login_comp({toggleAuth}) {
             <h1 className='text-4xl font-semi-bold mb-5'>Login</h1>
             <p className='mb-6'>Welcome back! Please enter your details.</p>
             <div className='mb-5'>
-              <input type="email" id='phone' placeholder='Phone' className='w-full border-b-2  border-gray-300 py-2 focus:outline-none focus:border-blue-500' />
+              <input type="text" id='phone' placeholder='Phone' className='w-full border-b-2  border-gray-300 py-2 focus:outline-none focus:border-blue-500' value={phoneNumber.value} onChange={phoneNumber.changeHandler} />
+              {phoneNumber.error&&<Typography variant='caption' color='error'>{phoneNumber.error}</Typography>}
             </div>
             <div className='mb-5'>
-              <input type="password" id='password' placeholder='Password' className='w-full border-b-2 border-gray-300  py-2  focus:outline-none focus:border-blue-500' />
+              <input type="password" id='password' placeholder='Password' className='w-full border-b-2 border-gray-300  py-2  focus:outline-none focus:border-blue-500' value={password.value} onChange={password.changeHandler} />
+              {password.error&&<Typography variant='caption' color='error'>{password.error}</Typography>}
             </div>
             <div className='mb-5'>
               <button className='w-full bg-black text-xl text-white py-2 rounded-md'>Login</button>
@@ -34,4 +40,4 @@ function login_comp({toggleAuth}) {
   )
 }
 
-export default login_comp
+export default Login_comp
