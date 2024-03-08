@@ -1,9 +1,11 @@
 import React from 'react'
-
+import AppLayout from '../components/style/AppLayout'
 function Groups() {
   return (
-    <div>Groups</div>
+    <div className='w-4/6 border-2 h-[95vh] flex justify-center items-center text-7xl'>
+      Groups
+    </div>
   )
 }
 
-export default Groups
+export default AppLayout()(Groups);

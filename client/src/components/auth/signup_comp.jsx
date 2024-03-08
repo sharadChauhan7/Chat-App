@@ -9,21 +9,23 @@ function Signup_comp({ toggleAuth }) {
   const userName = useInputValidation("", usernameValidator);
   const password = useStrongPassword();
   const phoneNumber = useInputValidation("", phoneValidator);
+  const yourAvatar = useFileHandler("single")
 
   return (
-    <form className="w-full" action="#">
+    <form className="w-full" >
       <div className="flex justify-between">
         <h1 className="text-4xl font-semi-bold mb-5">Signup</h1>
         <Stack position={"relative"} spacing={0} width="3rem">
-          <Avatar sx={{ height: "3rem", width: "3rem", objectFit: "cover" }} />
+          <Avatar sx={{ height: "4rem", width: "4rem", objectFit: "cover" }} src={yourAvatar.preview} />
           <IconButton
-            sx={{ position: "absolute", bottom: "0", right: "0" }}
-            componenet="label"
+            sx={{ position: "absolute", bottom: "0", right: "0" ,left:"50px" ,top:"40px",color:"black" }}
+            component="label"
           >
             <>
               <CameraAlt />
               <VisuallyHiddenInput
                 type="file"
+                onChange={yourAvatar.changeHandler}
               />
             </>
           </IconButton>
