@@ -9,7 +9,6 @@ import { BrowserRouter as Router ,Routes ,Route } from 'react-router-dom';
 
 // const Login = lazy(()=>{import("./pages/Login")});
 // const Home = lazy(()=>{import("./pages/Home")});
-let user = false;
 function App() {
 
   return (

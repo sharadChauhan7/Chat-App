@@ -1,15 +1,31 @@
 import React from "react";
+import { useState } from "react";
 import { Avatar, IconButton, Stack, Typography } from "@mui/material";
 import { CameraAlt } from "@mui/icons-material";
 import { VisuallyHiddenInput } from "../style/style";
 import { useInputValidation, useStrongPassword, useFileHandler } from "6pp";
 import { usernameValidator, phoneValidator } from "../../util/validators";
+import { redirect } from "react-router-dom"
+import axios from "axios";
 
 function Signup_comp({ toggleAuth }) {
   const userName = useInputValidation("", usernameValidator);
   const password = useStrongPassword();
   const phoneNumber = useInputValidation("", phoneValidator);
-  const yourAvatar = useFileHandler("single")
+  const yourAvatar = useFileHandler("single");
+
+  let [user,setUser]=useState({});//[user,setUser
+  async function handelSignup(e){
+    e.preventDefault();
+    let user={name:userName.value,phone:phoneNumber.value,password:password.value};
+    let token =await axios.post('http://localhost:3000/auth/register',{user});
+    if(token){
+      localStorage.setItem('token',JSON.stringify(token.data));
+      console.log("Woring Signup");
+      return redirect('/chat');
+    }
+      console.log("Error during Signup");
+   }
 
   return (
     <form className="w-full" >
@@ -40,6 +56,7 @@ function Signup_comp({ toggleAuth }) {
           className="w-full border-b-2  border-gray-300 py-2 focus:outline-none focus:border-blue-500"
           value={userName.value}
           onChange={userName.changeHandler}
+          required
         />
         {userName.error && (
           <Typography variant="caption" color="error">
@@ -55,6 +72,7 @@ function Signup_comp({ toggleAuth }) {
           className="w-full border-b-2  border-gray-300 py-2 focus:outline-none focus:border-blue-500"
           value={phoneNumber.value}
           onChange={phoneNumber.changeHandler}
+          required
         />
         {phoneNumber.error && (
           <Typography variant="caption" color="error">
@@ -70,6 +88,7 @@ function Signup_comp({ toggleAuth }) {
           className="w-full border-b-2 border-gray-300  py-2  focus:outline-none focus:border-blue-500"
           value={password.value}
           onChange={password.changeHandler}
+          required
         />
         {password.error && (
           <Typography variant="caption" color="error">
@@ -78,7 +97,7 @@ function Signup_comp({ toggleAuth }) {
         )}
       </div>
       <div className="mb-5">
-        <button className="w-full bg-black text-xl text-white py-2 rounded-md">
+        <button className="w-full bg-black text-xl text-white py-2 rounded-md" onClick={handelSignup}>
           Signup
         </button>
       </div>

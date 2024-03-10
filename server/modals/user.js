@@ -9,7 +9,7 @@ main().then((res)=>{console.log("Connection is up")}).catch(err => console.log(e
 console.log("Hello");
 
 async function main() {
-  await mongoose.connect(url);
+  await mongoose.connect('mongodb://127.0.0.1:27017/chatapp');
 }
 
 
@@ -23,7 +23,6 @@ const userSchema = new Schema({
         required:true,
         unique:true,
         min:10,
-        max:10,
         
     },
     password:{
