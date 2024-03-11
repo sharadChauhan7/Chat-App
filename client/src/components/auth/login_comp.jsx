@@ -3,8 +3,10 @@ import {useInputValidation,useStrongPassword} from '6pp'
 import {phoneValidator} from '../../util/validators'
 import { Typography } from '@mui/material';
 import { redirect } from "react-router-dom"
+import {useAuth} from '../../hooks/states'
 import axios from 'axios';
 function Login_comp({toggleAuth}) {
+  let {setLogin}=useAuth();
   const password = useStrongPassword();
   const phoneNumber = useInputValidation("",phoneValidator);
 
@@ -13,6 +15,7 @@ function Login_comp({toggleAuth}) {
     let token=await axios.post('http://localhost:3000/auth/login',{phone:phoneNumber.value,password:password.value});
     if(token){
       localStorage.setItem('token',JSON.stringify(token.data));
+      setLogin(true);
       console.log("Working Login");
       return redirect('/chat');
     }

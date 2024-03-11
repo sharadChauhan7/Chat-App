@@ -4,22 +4,25 @@ import Auth from './pages/Auth'
 import Group from './pages/Groups'
 import Chats from './pages/Chat'
 import Privateroute from './components/auth/privateroute';
+import {useAuth} from './hooks/states'
 
 import { BrowserRouter as Router ,Routes ,Route } from 'react-router-dom';
 
 // const Login = lazy(()=>{import("./pages/Login")});
 // const Home = lazy(()=>{import("./pages/Home")});
+
 function App() {
+  let {login}=useAuth();
 
   return (
     <Router>
       <Routes>
           <Route path='/' element={<Home/>}/>
-        <Route element={<Privateroute user={user}/>}>
+        <Route element={<Privateroute user={login}/>}>
           <Route path='group' element={<Group/>}/>
           <Route path='chats' element={<Chats/>}/>
         </Route>
-        <Route path='/auth' element={<Privateroute user={!user} path='/'>
+        <Route path='/auth' element={<Privateroute user={!login} path='/'>
           <Auth/>
         </Privateroute>}/>
       </Routes>

@@ -1,14 +1,16 @@
-import React from "react";
-import { useState } from "react";
+
+import React,{ useState } from "react";
 import { Avatar, IconButton, Stack, Typography } from "@mui/material";
 import { CameraAlt } from "@mui/icons-material";
 import { VisuallyHiddenInput } from "../style/style";
 import { useInputValidation, useStrongPassword, useFileHandler } from "6pp";
 import { usernameValidator, phoneValidator } from "../../util/validators";
 import { redirect } from "react-router-dom"
+import {useAuth} from '../../hooks/states'
 import axios from "axios";
 
 function Signup_comp({ toggleAuth }) {
+  let {setLogin}=useAuth();
   const userName = useInputValidation("", usernameValidator);
   const password = useStrongPassword();
   const phoneNumber = useInputValidation("", phoneValidator);
@@ -22,6 +24,7 @@ function Signup_comp({ toggleAuth }) {
     if(token){
       localStorage.setItem('token',JSON.stringify(token.data));
       console.log("Woring Signup");
+      setLogin(true);
       return redirect('/chat');
     }
       console.log("Error during Signup");
