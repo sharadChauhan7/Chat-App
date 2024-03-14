@@ -38,3 +38,9 @@ export const login=async(req,res)=>{
     }
 }
 
+export const getUser=async(req,res)=>{
+
+    let allUsers=await User.find();
+    res.send(JSON.stringify(allUsers));
+}
+

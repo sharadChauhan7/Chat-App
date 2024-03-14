@@ -6,27 +6,31 @@ import { VisuallyHiddenInput } from "../style/style";
 import { useInputValidation, useStrongPassword, useFileHandler } from "6pp";
 import { usernameValidator, phoneValidator } from "../../util/validators";
 import { redirect } from "react-router-dom"
-import {useAuth} from '../../hooks/states'
+import {useAuth} from '../../hooks/authstate'
 import axios from "axios";
+import Cookies from "js-cookie";
 
 function Signup_comp({ toggleAuth }) {
   let {setLogin}=useAuth();
   const userName = useInputValidation("", usernameValidator);
   const password = useStrongPassword();
   const phoneNumber = useInputValidation("", phoneValidator);
+
   const yourAvatar = useFileHandler("single");
 
   let [user,setUser]=useState({});//[user,setUser
+
   async function handelSignup(e){
     e.preventDefault();
     let user={name:userName.value,phone:phoneNumber.value,password:password.value};
     let token =await axios.post('http://localhost:3000/auth/register',{user});
     if(token){
-      localStorage.setItem('token',JSON.stringify(token.data));
+      Cookies.set('authToken',JSON.stringify(token.data),{expires:7});
       console.log("Woring Signup");
       setLogin(true);
       return redirect('/chat');
     }
+    console.log(yourAvatar);
       console.log("Error during Signup");
    }
 
