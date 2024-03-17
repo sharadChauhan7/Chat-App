@@ -19,7 +19,8 @@
     "js-cookie": "^3.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.2"
+    "react-router-dom": "^6.22.2",
+    "socket.io-client": "^4.7.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.56",

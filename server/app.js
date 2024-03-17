@@ -1,26 +1,42 @@
 import express from 'express';
-import User from './modals/user.js';
 import auth from './routes/auth.js';
 import cors from 'cors';
+import { Server } from 'socket.io';
+import { createServer } from 'http';
+
 const app = express();
-
-
-const port = process.env.PORT || 3000;
+const server= new createServer(app);
 
 const corsOptions = {
     origin:"http://localhost:5173",
     optionsSuccessStatus:200,
     credentials:true,
     methods:"GET,HEAD,PUT,PATCH,POST,DELETE",
-    preflightContinue:false,
 };
-app.use(cors(corsOptions));
 
+
+const port = process.env.PORT || 3000;
+
+
+const io = new Server(server,{cors:corsOptions});
+
+app.use(cors(corsOptions));
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
+// Socekt.io logic goes here
 
-app.listen(port,(req,res)=>{
+io.on('connection',(socket)=>{
+    console.log('User connected');
+    console.log(socket.id);
+});
+io.on('disconnect',(socket)=>{
+    console.log('User disconnected');
+    console.log(socket.id);
+});
+
+// Http server
+server.listen(port,(req,res)=>{
     console.log('Server is running on port 3000');
 })
 

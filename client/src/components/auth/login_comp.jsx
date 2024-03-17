@@ -14,7 +14,7 @@ function Login_comp({toggleAuth}) {
   async function handelLogin(e){
     e.preventDefault();
     let token=await axios.post('http://localhost:3000/auth/login',{phone:phoneNumber.value,password:password.value});
-    if(token){
+    if(token.data){
       Cookies.set('authToken',JSON.stringify(token.data),{expires:7});
       setLogin(true);
       console.log("Working Login");
@@ -22,7 +22,6 @@ function Login_comp({toggleAuth}) {
     }
       console.log("Error during Login");
   }
-
   return (
     // Login form goes here
     <>

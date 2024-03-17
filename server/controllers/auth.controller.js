@@ -29,7 +29,7 @@ export const login=async(req,res)=>{
                 if(err){
                     res.send("Error in decoding token");
                 }
-                res.send(token);
+                res.cookie('authToken',token,{httpOnly:true}).send(token);
               });
         }
     }catch(err){

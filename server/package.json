@@ -12,12 +12,13 @@
   "author": "Sharad Singh Chauhan",
   "license": "ISC",
   "dependencies": {
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.18.3",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.4.0",
     "mongoose": "^8.2.1",
-    "socket.io": "^4.7.4"
+    "socket.io": "^4.7.5"
   }
 }
