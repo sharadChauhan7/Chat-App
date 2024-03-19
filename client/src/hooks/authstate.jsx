@@ -11,19 +11,22 @@ export function AuthState({children}) {
   // Auth States
   let [allUsers,setAllUsers]=useState([]);
 
+  let[login,setLogin]=useState( Cookies.get('authToken')? true : false);
 
+  let[user,setUser]=useState(Cookies.get('user')? JSON.parse(Cookies.get('user')) : {});
     useEffect(()=>{
       async function getUsers(){
       let result = await axios.get('http://localhost:3000/auth/users');
       setAllUsers(result.data);
       }
       getUsers();
+
     },[]);
-  let[login,setLogin]=useState( Cookies.get('authToken')? true : false);
+
 
 
   return (
-    <AuthContext.Provider value={{login,setLogin,allUsers}}>
+    <AuthContext.Provider value={{login,setLogin,allUsers,user,setUser}}>
       {children}
     </AuthContext.Provider>
   );

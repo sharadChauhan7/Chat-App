@@ -10,7 +10,7 @@ export const signup=async(req,res)=>{
             if(err){
                 res.send("Error in generating token");
             }
-            res.send(token);
+            res.cookie('authToken',token,{httpOnly:true}).send({token:token,user:user});
           });
     }
     catch(err){
@@ -20,6 +20,7 @@ export const signup=async(req,res)=>{
         res.send("Error in saving user");
     }
 }
+
 export const login=async(req,res)=>{
     try{
         let {phone,password}=req.body;
@@ -29,7 +30,7 @@ export const login=async(req,res)=>{
                 if(err){
                     res.send("Error in decoding token");
                 }
-                res.cookie('authToken',token,{httpOnly:true}).send(token);
+                res.cookie('authToken',token,{httpOnly:true}).send({token:token,user:user});
               });
         }
     }catch(err){

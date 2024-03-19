@@ -7,16 +7,19 @@ import {useAuth} from '../../hooks/authstate'
 import axios from 'axios';
 import Cookies from 'js-cookie';
 function Login_comp({toggleAuth}) {
-  let {setLogin}=useAuth();
+  let {setLogin,setUser}=useAuth();
+
   const password = useStrongPassword();
   const phoneNumber = useInputValidation("",phoneValidator);
 
   async function handelLogin(e){
     e.preventDefault();
-    let token=await axios.post('http://localhost:3000/auth/login',{phone:phoneNumber.value,password:password.value});
-    if(token.data){
-      Cookies.set('authToken',JSON.stringify(token.data),{expires:7});
+    let result=await axios.post('http://localhost:3000/auth/login',{phone:phoneNumber.value,password:password.value});
+    if(result.data){
+      Cookies.set('authToken',JSON.stringify(result.data.token),{expires:7});
+      Cookies.set('user',JSON.stringify(result.data.user),{expires:7});
       setLogin(true);
+      setUser(result.data.user);
       console.log("Working Login");
       return redirect('/chat');
     }

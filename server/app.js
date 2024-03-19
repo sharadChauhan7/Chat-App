@@ -9,32 +9,40 @@ const server= new createServer(app);
 
 const corsOptions = {
     origin:"http://localhost:5173",
-    optionsSuccessStatus:200,
     credentials:true,
     methods:"GET,HEAD,PUT,PATCH,POST,DELETE",
 };
+const io = new Server(server,{cors:corsOptions});
 
 
 const port = process.env.PORT || 3000;
 
 
-const io = new Server(server,{cors:corsOptions});
 
 app.use(cors(corsOptions));
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
+// Socket middleware
+io.use((socket,next)=>{
+    console.log('Socket middleware');
+    socket.userId=socket.handshake.auth.userId;
+    console.log(socket.userId);
+    next();
+});
+
 // Socekt.io logic goes here
-
 io.on('connection',(socket)=>{
-    console.log('User connected');
-    console.log(socket.id);
+    // console.log('User connected');
+    // console.log(socket.id);
+    socket.on("message",(req)=>{
+        console.log(socket.id," said ",req);          
+        socket.broadcast.emit('Welcome',socket.id);
+    });
+    socket.on('disconnect',(socket)=>{
+        console.log('User disconnected');
+    });
 });
-io.on('disconnect',(socket)=>{
-    console.log('User disconnected');
-    console.log(socket.id);
-});
-
 // Http server
 server.listen(port,(req,res)=>{
     console.log('Server is running on port 3000');

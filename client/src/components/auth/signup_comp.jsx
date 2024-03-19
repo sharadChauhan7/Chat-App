@@ -11,23 +11,24 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 function Signup_comp({ toggleAuth }) {
-  let {setLogin}=useAuth();
+  let {setLogin,setUser}=useAuth();
   const userName = useInputValidation("", usernameValidator);
   const password = useStrongPassword();
   const phoneNumber = useInputValidation("", phoneValidator);
 
   const yourAvatar = useFileHandler("single");
 
-  let [user,setUser]=useState({});//[user,setUser
 
   async function handelSignup(e){
     e.preventDefault();
     let user={name:userName.value,phone:phoneNumber.value,password:password.value};
-    let token =await axios.post('http://localhost:3000/auth/register',{user});
-    if(token){
-      Cookies.set('authToken',JSON.stringify(token.data),{expires:7});
+    let result =await axios.post('http://localhost:3000/auth/register',{user});
+    if(result.data.token){
+      Cookies.set('authToken',JSON.stringify(result.data.token),{expires:7});
+      Cookies.set('user',JSON.stringify(result.data.user),{expires:7});
       console.log("Woring Signup");
       setLogin(true);
+      setUser(result.data.user);
       return redirect('/chat');
     }
     console.log(yourAvatar);

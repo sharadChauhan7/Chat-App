@@ -7,27 +7,33 @@ import Privateroute from './components/auth/privateroute';
 import {useAuth} from './hooks/authstate'
 import NotFound from './pages/NotFound'
 import { BrowserRouter as Router ,Routes ,Route } from 'react-router-dom';
+import socket from './util/Socket';
+import toast, { Toaster } from 'react-hot-toast';
 
-import {io} from 'socket.io-client'
-const socket = io('http://localhost:3000',{
-  autoConnect:false
-});
 
 
 function App() {
-  let {login}=useAuth();
+
+  let {login,user}=useAuth();
   useEffect(()=>{
-    socket.connect();
+
+    login?socket.connect():console.log("Not loged in user");
+    socket.auth={userId:user};
   
     socket.on('connect',()=>{
       console.log("Connected to server");
       // Console socket id
       console.log(socket.id);
-    })
+    });
+    socket.on('Welcome',(req)=>{
+      toast.success(`${req} joined the chat`);
+    });
     return ()=>{
+
       socket.disconnect();
     }
   },[]);
+
 
   return (
     <Router>
