@@ -8,21 +8,21 @@ const AppLayout = () => (WrappedComponent) => {
 
     return (props) => {
         let CurrentUser=socket.id;
-        let [users,setUsers]=useState({});
-        let [friendId,setFriendId]=useState();
-        function letsChat(data){
-            setFriendId(data.socketID);
-            console.log(`Friend id: ${friendId} My iD: ${CurrentUser}`);
-        }
-        useEffect(()=>{
-            socket.on("users",(req)=>{
-                setUsers(req);
-            });
-        },[]);
 
-        let {allUsers}=useAuth();
+        let [friendId,setFriendId]=useState();
+
+        // Choosing the User to Chat
+
+        function letsChat(data){
+
+            data.socketID==CurrentUser?setFriendId(null):setFriendId(data.socketID);
+        }
+
+        let {allUsers,liveUsers}=useAuth();
+
+        // Checking if User is Live or not
         function isOnline(user){
-            for(let i of users){
+            for(let i of liveUsers){
                 if(user.name==i.userName){
                     return {status:true,socketID:i.userID}   
                 }
@@ -32,16 +32,16 @@ const AppLayout = () => (WrappedComponent) => {
         return (
             <>
                 <Header />
-                {users.length?<div className='flex h-full'>
+                {liveUsers.length?<div className='flex h-full'>
                     <div className=' w-4/12 border-r-2 h-[93vh]'>
                     <div className='w-full rounded-3xl h-9 my-2 px-2 border-b-slate-700'><input type="search" className='w-[90%] h-full px-5 text-xl focus:outline-none' placeholder='Search' /><SearchIcon/></div>
                         {allUsers.map((user,index)=>{
                             let live=isOnline(user);
-                            return <User key={user._id} name={user.name} live={live} letsChat={letsChat}/>
+                            return <User key={user._id} name={user.name} live={live} letsChat={letsChat} friendId={friendId}/>
                         })
                         }
                     </div>
-                    <WrappedComponent {...props} {...{ friendId, CurrentUser }}  />
+                    <WrappedComponent {...props} {...{ friendId }}  />
                     <div className='w-2/12 h-[93vh] max-md:hidden'>Third</div>
                 </div>:null}
             </>

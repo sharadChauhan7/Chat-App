@@ -19,17 +19,16 @@ function App() {
 
     login?socket.connect():console.log("Not loged in user");
     socket.auth={userName:user.name};
-  
-    socket.on('connect',()=>{
-      console.log("Connected to server");
-      // Console socket id
-      console.log(socket.id);
-    });
 
     socket.on("user connected",(req)=>{
-      console.log("Connected");
       toast.success(`${req.userName} joined the chat`);
     });
+    socket.on("connect_error", (err) => {
+      if (err.message === "invalid username") {
+        this.usernameAlreadySelected = false;
+      }
+    });
+
     return ()=>{
       socket.disconnect();
     }
