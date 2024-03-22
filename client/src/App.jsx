@@ -18,18 +18,19 @@ function App() {
   useEffect(()=>{
 
     login?socket.connect():console.log("Not loged in user");
-    socket.auth={userId:user};
+    socket.auth={userName:user.name};
   
     socket.on('connect',()=>{
       console.log("Connected to server");
       // Console socket id
       console.log(socket.id);
     });
-    socket.on('Welcome',(req)=>{
-      toast.success(`${req} joined the chat`);
+
+    socket.on("user connected",(req)=>{
+      console.log("Connected");
+      toast.success(`${req.userName} joined the chat`);
     });
     return ()=>{
-
       socket.disconnect();
     }
   },[]);

@@ -25,22 +25,31 @@ app.use(express.json());
 
 // Socket middleware
 io.use((socket,next)=>{
-    console.log('Socket middleware');
-    socket.userId=socket.handshake.auth.userId;
-    console.log(socket.userId);
+    socket.userName=socket.handshake.auth.userName;
     next();
 });
 
 // Socekt.io logic goes here
 io.on('connection',(socket)=>{
-    // console.log('User connected');
-    // console.log(socket.id);
-    socket.on("message",(req)=>{
-        console.log(socket.id," said ",req);          
-        socket.broadcast.emit('Welcome',socket.id);
+  const users = [];
+  for (let [id, socket] of io.of("/").sockets) {
+    users.push({
+      userID: id,
+      userName: socket.userName,
     });
+  }
+  socket.emit("users", users);
+
+    socket.broadcast.emit("user connected",{
+        userID: socket.id,
+        userName: socket.userName,
+      });
+
     socket.on('disconnect',(socket)=>{
         console.log('User disconnected');
+    });
+    socket.on('message',(req)=>{
+        console.log(req);
     });
 });
 // Http server
