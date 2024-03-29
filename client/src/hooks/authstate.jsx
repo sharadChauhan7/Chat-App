@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { createContext,useContext,useState } from 'react'
 import Cookies from 'js-cookie';
-import { json } from 'react-router-dom';
 import socket from '../util/Socket';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
@@ -23,9 +22,11 @@ export function AuthState({children}) {
       async function getUsers(){
 
       let result = await axios.get('http://localhost:3000/auth/users');
-      
+
       setAllUsers(result.data);
+
       }
+      
       getUsers();
 
       socket.on("users",(req)=>{

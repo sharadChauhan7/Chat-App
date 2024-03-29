@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
+import Conversation from './Conversations.js';
 import 'dotenv/config'
 
 

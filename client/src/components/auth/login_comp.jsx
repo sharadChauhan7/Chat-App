@@ -2,12 +2,14 @@ import React from 'react'
 import {useInputValidation,useStrongPassword} from '6pp'
 import {phoneValidator} from '../../util/validators'
 import { Typography } from '@mui/material';
-import { redirect } from "react-router-dom"
 import {useAuth} from '../../hooks/authstate'
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 function Login_comp({toggleAuth}) {
   let {setLogin,setUser}=useAuth();
+
+  const navigate=useNavigate();
 
   const password = useStrongPassword();
   const phoneNumber = useInputValidation("",phoneValidator);
@@ -21,7 +23,7 @@ function Login_comp({toggleAuth}) {
       setLogin(true);
       setUser(result.data.user);
       console.log("Working Login");
-      return redirect('/chat');
+      navigate('/');
     }
       console.log("Error during Login");
   }

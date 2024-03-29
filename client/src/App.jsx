@@ -9,12 +9,17 @@ import NotFound from './pages/NotFound'
 import { BrowserRouter as Router ,Routes ,Route } from 'react-router-dom';
 import socket from './util/Socket';
 import toast, { Toaster } from 'react-hot-toast';
+import { useParams } from 'react-router-dom';
 
 
 
 function App() {
 
+
+  let userId=useParams();
+
   let {login,user}=useAuth();
+
   useEffect(()=>{
 
     login?socket.connect():console.log("Not loged in user");
@@ -41,7 +46,7 @@ function App() {
           <Route path='/' element={<Home/>}/>
         <Route element={<Privateroute user={login}/>}>
           <Route path='group' element={<Group/>}/>
-          <Route path='chats' element={<Chats/>}/>
+          <Route path='chats/:userId' element={<Chats/>}/>
         </Route>
         <Route path='/auth' element={<Privateroute user={!login} path='/'>
           <Auth/>

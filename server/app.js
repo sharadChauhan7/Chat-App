@@ -1,5 +1,6 @@
 import express from 'express';
 import auth from './routes/auth.js';
+import chats from './routes/chats.js';
 import cors from 'cors';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
@@ -79,7 +80,6 @@ io.on('connection', (socket) => {
   socket.to(to).emit("private message", {
     content,
     from: socket.id,
-    SentAt: Date.now(),
   });
 });
 
@@ -106,3 +106,4 @@ app.get('/', (req, res) => {
 });
 
 app.use('/auth', auth);
+app.use('/', chats);
