@@ -14,7 +14,7 @@ function Login_comp({toggleAuth}) {
 
   async function handelLogin(e){
     e.preventDefault();
-    let result=await axios.post('http://localhost:3000/auth/login',{phone:phoneNumber.value,password:password.value});
+    let result= await axios.post('http://localhost:3000/auth/login',{phone:phoneNumber.value,password:password.value});
     if(result.data){
       Cookies.set('authToken',JSON.stringify(result.data.token),{expires:7});
       Cookies.set('user',JSON.stringify(result.data.user),{expires:7});

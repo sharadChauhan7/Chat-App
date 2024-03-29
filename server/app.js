@@ -9,7 +9,7 @@ const app = express();
 const server = new createServer(app);
 
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: '*',
   credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
 };
@@ -54,8 +54,12 @@ io.use((socket, next) => {
   next();
 });
 
+
+
 // Socekt.io logic goes here
 io.on('connection', (socket) => {
+  
+  console.log('New user connected');
 
   emitAllUsers();
 

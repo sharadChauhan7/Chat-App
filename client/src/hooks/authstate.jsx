@@ -21,7 +21,9 @@ export function AuthState({children}) {
 
     useEffect(()=>{
       async function getUsers(){
+
       let result = await axios.get('http://localhost:3000/auth/users');
+      
       setAllUsers(result.data);
       }
       getUsers();
