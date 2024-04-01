@@ -12,6 +12,9 @@ function Chat({friendSocketId}) {
 
     let { userId } = useParams();
     
+    // Prev Conversation with the user
+    let [prevUser, setPrevUser] = useState(userId);
+
     let CurrentUserId=Cookies.get('user')? JSON.parse(Cookies.get('user'))._id : null;
     // Handle the message input
     let [message, setMessage] = useState('');
@@ -49,10 +52,16 @@ function Chat({friendSocketId}) {
   useEffect(()=>{
     try{
     async function sendConversation(chats){
+        // if(chats.length>0){
+        //   console.log(chats);
+        //   let result = await axios.post('http://localhost:3000/setconversation',{chats,friendId:userId,userID:CurrentUserId});
+        //   console.log(result.data);
+        //   console.log("Sending Conversation");
+        //   setChats([]);
+        // }
         if(chats.length>0){
-          console.log(chats);
-          let result = await axios.post('http://localhost:3000/setconversation',{chats,friendId:userId,userID:CurrentUserId});
-          console.log(result.data);
+          localStorage.setItem(`${prevUser}`,JSON.stringify(chats));
+          setPrevUser(userId);
           console.log("Sending Conversation");
           setChats([]);
         }
@@ -60,12 +69,21 @@ function Chat({friendSocketId}) {
       sendConversation(chats);
     async function getConversation(){
       
-      let result = await axios.post('http://localhost:3000/getconversation',{friendId:userId,userID:CurrentUserId});
-      console.log(result.data);
-      if(result.data=="No Convo"){
+      // let result = await axios.post('http://localhost:3000/getconversation',{friendId:userId,userID:CurrentUserId});
+      // console.log(result.data);
+      // if(result.data=="No Convo"){
+      //   setChats([]);
+      // }else{
+      //   setChats(result.data.messages);
+      // }
+      let result = localStorage.getItem(`${userId}`,JSON.stringify(chats));
+      setPrevUser(userId);
+      result=JSON.parse(result);
+      if(result ){
+        setChats(result);
+      }
+      else{
         setChats([]);
-      }else{
-        setChats(result.data.messages);
       }
 
     }

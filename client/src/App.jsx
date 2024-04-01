@@ -29,20 +29,22 @@ function App() {
     
     function preSetup(){
       const session=JSON.parse(localStorage.getItem('session'));
-      console.log("Session in local Storage ",session);
-      socket.auth={userName:user.name};
       if(session){
         socket.auth={sessionID:session.sessionID};
         socket.userID=session.userID;
+      }
+      else{
+        socket.auth={userName:user.name};
       }
       socket.connect();
     }
 
     // Getting Session 
-    socket.on('session',({sessionID,userID})=>{
-      socket.auth.sessionID={sessionID};
+    socket.on('session',({sessionID,userID,userName})=>{
+      socket.auth={sessionID};
       localStorage.setItem('session',JSON.stringify({sessionID,userID}));
       socket.userID=userID;
+      socket.userName=userName;
     })
 
     socket.on("user connected",(req)=>{

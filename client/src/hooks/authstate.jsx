@@ -22,7 +22,7 @@ export function AuthState({children}) {
       async function getUsers(){
 
       let result = await axios.get('http://localhost:3000/auth/users');
-
+        // Find OurSelf and add in the front
       setAllUsers(result.data);
 
       }

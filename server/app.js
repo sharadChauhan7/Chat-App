@@ -28,29 +28,29 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Socket middleware
-io.use((socket, next) => {
-  socket.userName = socket.handshake.auth.userName;
-  console.log('User Name', socket.userName);
-  next();
-});
+// io.use((socket, next) => {
+//   socket.userName = socket.handshake.auth.userName;
+//   console.log('User Name', socket.userName);
+//   next();
+// });
 
 io.use((socket, next) => {
+
   const sessionID = socket.handshake.auth.sessionID;
-  console.log('Session ID', sessionID);
+
   if (sessionID) {
     // find existing session
     const session = sessionStore.findSession(sessionID);
-    console.log('Found Session', session);
     if (session) {
       socket.sessionID = sessionID;
       socket.userID = session.userID;
-      socket.username = session.userName;
+      socket.userName = session.userName;
       console.log('User Refreshed');
       return next();
     }
   }
   const userName = socket.handshake.auth.userName;
-
+  console.log('User Connected', socket.id);
   if (!userName) {
     return next(new Error("invalid username"));
   }
@@ -68,7 +68,6 @@ io.use((socket, next) => {
 
 // Socekt.io logic goes here
 io.on('connection', (socket) => {
-
   emitAllUsers();
 
   socket.broadcast.emit("user connected", {
@@ -78,6 +77,7 @@ io.on('connection', (socket) => {
   socket.emit("session", {
     sessionID: socket.sessionID,
     userID: socket.userID,
+    userName: socket.userName,
   });
 
   socket.on('disconnect', () => {

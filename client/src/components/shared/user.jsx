@@ -1,15 +1,26 @@
 import React from 'react'
 import {Avatar,ListItemText} from '@mui/material';
 import Ryan from '../../assets/Ryan.jpeg'
-import {Link} from 'react-router-dom'
+import {Link,useParams} from 'react-router-dom'
 import socket from '../../util/Socket';
 
 function User({name="Sharad Chauhan", userId ,lastMsg="Jan 9, 2014",live=false ,letsChat,friendSocketId}) {
+  let shouldDisable = live.status==false || friendSocketId=="";
+  function checkValidity(e){
+    console.log(shouldDisable);
+    if(shouldDisable){
+      e.preventDefault();
+      return;
+    }
+    else{
+      return;
+    }
+  }
+  console.log(live.socketID, socket.id);
   return (
     <>
-    <div className={`${friendSocketId==live.socketID?"bg-[#ececec]":""}`}>
-
-    <Link to={`/chats/${userId}`} >
+    <div className={`${friendSocketId==live.socketID?"bg-[#ececec]":""}`}  >
+    <Link to={`/chats/${userId}`} onClick={checkValidity} >
     <div className={`flex h-16 border-b-2  items-center px-3 cursor-pointer transition ease-in-out `} onClick={()=>{letsChat(live)}} >
         <Avatar alt="Remy Sharp" src={Ryan} sx={{ width: 50, height: 50 }} />
         <div className='px-3'>
