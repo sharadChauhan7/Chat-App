@@ -5,6 +5,8 @@ import cors from 'cors';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
 import { randomId } from './util/randomID.js';
+import  sessionStore  from './util/sessionStore.js';
+
 
 const app = express();
 const server = new createServer(app);
@@ -28,30 +30,37 @@ app.use(express.json());
 // Socket middleware
 io.use((socket, next) => {
   socket.userName = socket.handshake.auth.userName;
+  console.log('User Name', socket.userName);
   next();
 });
 
 io.use((socket, next) => {
   const sessionID = socket.handshake.auth.sessionID;
+  console.log('Session ID', sessionID);
   if (sessionID) {
     // find existing session
     const session = sessionStore.findSession(sessionID);
+    console.log('Found Session', session);
     if (session) {
       socket.sessionID = sessionID;
       socket.userID = session.userID;
       socket.username = session.userName;
+      console.log('User Refreshed');
       return next();
     }
   }
   const userName = socket.handshake.auth.userName;
+
   if (!userName) {
     return next(new Error("invalid username"));
   }
+
   // create new session
   socket.sessionID = randomId();
   socket.userID = randomId();
   socket.userName = userName;
-  console.log(socket.userID);
+  // Save Session
+  sessionStore.saveSession({ sessionID: socket.sessionID, userID: socket.userID, userName: socket.userName })
   next();
 });
 
@@ -59,14 +68,16 @@ io.use((socket, next) => {
 
 // Socekt.io logic goes here
 io.on('connection', (socket) => {
-  
-  console.log('New user connected');
 
   emitAllUsers();
 
   socket.broadcast.emit("user connected", {
     userID: socket.id,
     userName: socket.userName,
+  });
+  socket.emit("session", {
+    sessionID: socket.sessionID,
+    userID: socket.userID,
   });
 
   socket.on('disconnect', () => {

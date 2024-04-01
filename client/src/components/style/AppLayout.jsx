@@ -29,7 +29,7 @@ const AppLayout = () => (WrappedComponent) => {
                     }
                 }
             }
-            return {status:false,socketID:null}
+            return {status:false,socketID:""}
         }
         return (
             <>

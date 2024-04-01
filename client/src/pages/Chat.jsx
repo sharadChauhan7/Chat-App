@@ -75,8 +75,8 @@ function Chat({friendSocketId}) {
       console.log(err);
     }
   },[userId]);
+  
   return (
-
     <div className='w-full flex flex-col border-2 h-[93vh] justify-center items-center overflow-hidden '>
       <MsgBox messages={chats} CurrentUserId={CurrentUserId}  />
       <Input send={sendMessage} handle={handleMessage} message={message} />

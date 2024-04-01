@@ -4,7 +4,6 @@ import Conversation from '../modals/Conversations.js';
 export const getConversations = async (req, res) => {
     let { userID, friendId } = req.body;
     let conversation = await Conversation.findOne({ members: [userID, friendId] });
-    console.log(conversation);
     if(conversation){
         res.send(conversation);
     }

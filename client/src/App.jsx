@@ -22,15 +22,36 @@ function App() {
 
   useEffect(()=>{
 
-    login?socket.connect():console.log("Not loged in user");
-    socket.auth={userName:user.name};
+    login?preSetup():console.log("Not loged in user");
+
+    
+    // Pre Setup
+    
+    function preSetup(){
+      const session=JSON.parse(localStorage.getItem('session'));
+      console.log("Session in local Storage ",session);
+      socket.auth={userName:user.name};
+      if(session){
+        socket.auth={sessionID:session.sessionID};
+        socket.userID=session.userID;
+      }
+      socket.connect();
+    }
+
+    // Getting Session 
+    socket.on('session',({sessionID,userID})=>{
+      socket.auth.sessionID={sessionID};
+      localStorage.setItem('session',JSON.stringify({sessionID,userID}));
+      socket.userID=userID;
+    })
 
     socket.on("user connected",(req)=>{
       toast.success(`${req.userName} joined the chat`);
     });
     socket.on("connect_error", (err) => {
+
       if (err.message === "invalid username") {
-        this.usernameAlreadySelected = false;
+        toast.error("Invalid Username");
       }
     });
 
