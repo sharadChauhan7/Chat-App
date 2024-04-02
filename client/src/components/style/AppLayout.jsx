@@ -5,17 +5,13 @@ import SearchIcon from '@mui/icons-material/Search'
 import {useAuth} from '../../hooks/authstate'
 import socket from '../../util/Socket'
 const AppLayout = () => (WrappedComponent) => {
-
     return (props) => {
-        let CurrentUser=socket.id;
-
         let [friendSocketId,setFriendSocketId]=useState();
 
         // Choosing the User to Chat
 
         function letsChat(data){
-
-            data.socketID==CurrentUser?setFriendSocketId(null):setFriendSocketId(data.socketID);
+            setFriendSocketId(data.socketID);
         }
 
         let {allUsers,liveUsers}=useAuth();

@@ -23,6 +23,9 @@ export function AuthState({children}) {
 
       let result = await axios.get('http://localhost:3000/auth/users');
         // Find OurSelf and add in the front
+        if(user){
+          
+        }
       setAllUsers(result.data);
 
       }
@@ -30,8 +33,9 @@ export function AuthState({children}) {
       getUsers();
 
       socket.on("users",(req)=>{
+        console.log(req);
         setLiveUsers(req);
-        console.log("Got the All Users");
+        // console.log("Got the All Users");
       });
       
       socket.on("user disconnected",(req)=>{

@@ -50,7 +50,6 @@ io.use((socket, next) => {
     }
   }
   const userName = socket.handshake.auth.userName;
-  console.log('User Connected', socket.id);
   if (!userName) {
     return next(new Error("invalid username"));
   }
@@ -68,12 +67,14 @@ io.use((socket, next) => {
 
 // Socekt.io logic goes here
 io.on('connection', (socket) => {
+  socket.join(socket.userName);
   emitAllUsers();
 
   socket.broadcast.emit("user connected", {
     userID: socket.id,
     userName: socket.userName,
   });
+
   socket.emit("session", {
     sessionID: socket.sessionID,
     userID: socket.userID,
@@ -88,13 +89,11 @@ io.on('connection', (socket) => {
     emitAllUsers();
   });
   socket.on("private message", ({ content, to }) => {
-  socket.to(to).emit("private message", {
+  socket.to(to).to(socket.userID).emit("private message", {
     content,
-    from: socket.id,
+    from: socket.userID,
   });
 });
-
-
 });
 // Http server
 server.listen(port, (req, res) => {
@@ -104,8 +103,9 @@ server.listen(port, (req, res) => {
 function emitAllUsers() {
   const users = [];
   for (let [id, socket] of io.of("/").sockets) {
+    console.log(socket);
     users.push({
-      userID: id,
+      userID: socket.userID,
       userName: socket.userName,
     });
   }

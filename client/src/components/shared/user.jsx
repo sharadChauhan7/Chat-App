@@ -5,9 +5,10 @@ import {Link,useParams} from 'react-router-dom'
 import socket from '../../util/Socket';
 
 function User({name="Sharad Chauhan", userId ,lastMsg="Jan 9, 2014",live=false ,letsChat,friendSocketId}) {
-  let shouldDisable = live.status==false || friendSocketId=="";
+
+  let shouldDisable = live.status===false;
+
   function checkValidity(e){
-    console.log(shouldDisable);
     if(shouldDisable){
       e.preventDefault();
       return;
@@ -16,15 +17,14 @@ function User({name="Sharad Chauhan", userId ,lastMsg="Jan 9, 2014",live=false ,
       return;
     }
   }
-  console.log(live.socketID, socket.id);
   return (
     <>
-    <div className={`${friendSocketId==live.socketID?"bg-[#ececec]":""}`}  >
+    <div className={`${friendSocketId===live.socketID && friendSocketId!="" ?"bg-[#ececec]":""}`}  >
     <Link to={`/chats/${userId}`} onClick={checkValidity} >
     <div className={`flex h-16 border-b-2  items-center px-3 cursor-pointer transition ease-in-out `} onClick={()=>{letsChat(live)}} >
         <Avatar alt="Remy Sharp" src={Ryan} sx={{ width: 50, height: 50 }} />
         <div className='px-3'>
-         <ListItemText primary={name+((live.socketID)==socket.id?" (You)":"")} secondary={lastMsg} />
+         <ListItemText primary={name+((live.socketID)==socket.userID?" (You)":"")} secondary={lastMsg} />
         </div>
         {live.status?<div className='bg-green-500 w-3 h-3 rounded-full'></div>:<div className='bg-red-500 w-3 h-3 rounded-full'></div>}
     </div>
