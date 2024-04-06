@@ -9,7 +9,6 @@ const AppLayout = () => (WrappedComponent) => {
         let [friendSocketId,setFriendSocketId]=useState();
 
         // Choosing the User to Chat
-
         function letsChat(data){
             setFriendSocketId(data.socketID);
         }

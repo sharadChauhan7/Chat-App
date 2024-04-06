@@ -38,6 +38,7 @@ function Chat({friendSocketId}) {
   
   useEffect(() => {
     socket.on("private message", ({ content }) => {
+      console.log("Triggered");
       setChats((prev) => {
         return [...prev, { content, userId }];
       });

@@ -24,6 +24,7 @@ function Login_comp({toggleAuth}) {
       setUser(result.data.user);
       console.log("Working Login");
       navigate('/');
+      return;
     }
       console.log("Error during Login");
   }

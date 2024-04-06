@@ -67,11 +67,12 @@ io.use((socket, next) => {
 
 // Socekt.io logic goes here
 io.on('connection', (socket) => {
-  socket.join(socket.userName);
+  socket.join(socket.userID);
+  console.log("Joined");
   emitAllUsers();
 
   socket.broadcast.emit("user connected", {
-    userID: socket.id,
+    userID: socket.userID,
     userName: socket.userName,
   });
 
@@ -81,12 +82,19 @@ io.on('connection', (socket) => {
     userName: socket.userName,
   });
 
-  socket.on('disconnect', () => {
-    socket.broadcast.emit('user disconnected', {
-      userID: socket.id,
-      userName: socket.userName,
-    })
-    emitAllUsers();
+  socket.on('disconnect', async () => {
+    const matchingSockets = await io.in(socket.userID).fetchSockets();
+    const isDisconnected = matchingSockets.size === 0;
+    if (isDisconnected) {
+      // notify other users
+      socket.broadcast.emit("user disconnected", socket.userID);
+      // update the connection status of the session
+      sessionStore.saveSession(socket.sessionID, {
+        userID: socket.userID,
+        username: socket.username,
+        connected: false,
+      });
+    }
   });
   socket.on("private message", ({ content, to }) => {
   socket.to(to).to(socket.userID).emit("private message", {
@@ -103,7 +111,7 @@ server.listen(port, (req, res) => {
 function emitAllUsers() {
   const users = [];
   for (let [id, socket] of io.of("/").sockets) {
-    console.log(socket);
+    console.log(socket.userID);
     users.push({
       userID: socket.userID,
       userName: socket.userName,
