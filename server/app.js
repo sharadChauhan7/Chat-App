@@ -96,10 +96,11 @@ io.on('connection', (socket) => {
       });
     }
   });
-  socket.on("private message", ({ content, to }) => {
+  socket.on("private message", ({ content, to, userId }) => {
   socket.to(to).to(socket.userID).emit("private message", {
     content,
     from: socket.userID,
+    userId
   });
 });
 });

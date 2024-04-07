@@ -33,7 +33,9 @@ const AppLayout = () => (WrappedComponent) => {
                     <div className=' w-4/12 border-r-2 h-[93vh]'>
                     <div className='w-full rounded-3xl h-9 my-2 px-2 border-b-slate-700'><input type="search" className='w-[90%] h-full px-5 text-xl focus:outline-none' placeholder='Search' /><SearchIcon/></div>
                         {allUsers.map((user,index)=>{
+                            
                             let live=isOnline(user);
+
                             return <User key={user._id} userId={user._id} name={user.name} live={live} letsChat={letsChat} friendSocketId={friendSocketId}/>
                         })
                         }

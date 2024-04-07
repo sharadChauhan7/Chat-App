@@ -25,22 +25,45 @@ function Chat({friendSocketId}) {
   
     // Send the message
     function sendMessage(e) {
-
       e.preventDefault();
-      setChats((prev)=>{
-        return [...prev,{content:message,from:CurrentUserId}]
-      })
-      socket.emit('private message', {  content: message, to: friendSocketId});
+      setChats((prev) => {
+        // Create a copy of the previous state
+        const newChats = { ...prev };
+      
+        // Check if the user ID exists
+        if (userId in newChats) {
+          // Update the chat for the existing user
+          newChats[userId].push({content:message,from:CurrentUserId});
+        } else {
+          // Add a new chat object for the user
+          newChats[userId] = [{content:message,from:CurrentUserId}];
+        }
+      
+        return newChats;
+      });
+      socket.emit('private message', {  content: message, to: friendSocketId, userId:CurrentUserId});
       setMessage('');
     }
       // A data structure to store the messages and the user who sent it
-  let [chats, setChats] = useState([]);
-  
+  let [chats, setChats] = useState({});
   useEffect(() => {
-    socket.on("private message", ({ content }) => {
+    socket.on("private message", (data) => {
       console.log("Triggered");
+
       setChats((prev) => {
-        return [...prev, { content, userId }];
+        // Create a copy of the previous state
+        const newChats = { ...prev };
+      
+        // Check if the user ID exists
+        if (data.userId in newChats) {
+          // Update the chat for the existing user
+          newChats[data.userId].push({content:data.content,from:data.from});
+        } else {
+          // Add a new chat object for the user
+          newChats[data.userId] = [{content:data.content,from:data.from}];
+        }
+      
+        return newChats;
       });
     });
     return () => {
@@ -67,7 +90,7 @@ function Chat({friendSocketId}) {
           setChats([]);
         }
       }
-      sendConversation(chats);
+      // sendConversation(chats);
     async function getConversation(){
       
       // let result = await axios.post('http://localhost:3000/getconversation',{friendId:userId,userID:CurrentUserId});
@@ -88,16 +111,19 @@ function Chat({friendSocketId}) {
       }
 
     }
-    getConversation();
+    // getConversation();
     }
     catch(err){
       console.log(err);
     }
   },[userId]);
+  console.log(userId);
+  console.log(chats);
+  console.log(chats[userId]);
   
   return (
     <div className='w-full flex flex-col border-2 h-[93vh] justify-center items-center overflow-hidden '>
-      <MsgBox messages={chats} CurrentUserId={CurrentUserId}  />
+      <MsgBox messages={chats[userId]} CurrentUserId={CurrentUserId}  />
       <Input send={sendMessage} handle={handleMessage} message={message} />
     </div>
   )
