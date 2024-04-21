@@ -122,7 +122,7 @@ function Chat({friendSocketId}) {
   console.log(chats[userId]);
   
   return (
-    <div className='w-full flex flex-col border-2 h-[93vh] justify-center items-center overflow-hidden '>
+    <div className='w-full flex flex-col border-l-2 border-r-2 h-[93vh] justify-center items-center '>
       <MsgBox messages={chats[userId]} CurrentUserId={CurrentUserId}  />
       <Input send={sendMessage} handle={handleMessage} message={message} />
     </div>
