@@ -30,8 +30,8 @@ const AppLayout = () => (WrappedComponent) => {
             <>
                 <Header />
                 {allUsers.length?<div className='flex h-full'>
-                    <div className=' w-4/12 border-r-2 h-[93vh]'>
-                    <div className='w-full rounded-3xl h-9 my-2 px-2 border-b-slate-700'><input type="search" className='w-[90%] h-full px-5 text-xl focus:outline-none' placeholder='Search' /><SearchIcon/></div>
+                    <div className=' w-4/12 border-r-2 h-[93vh] bg-black'>
+                    <div className='w-full rounded-3xl h-10 my-2 px-2 border bg-slate-200 flex items-center'><input type="search" className='w-[90%] h-full px-8 text-xl focus:outline-none rounded-xl bg-slate-200 border-slate-600 ' placeholder='Search' /><SearchIcon/></div>
                         {allUsers.map((user,index)=>{
                             
                             let live=isOnline(user);
@@ -41,7 +41,7 @@ const AppLayout = () => (WrappedComponent) => {
                         }
                     </div>
                     <WrappedComponent {...props} {...{ friendSocketId }}  />
-                    <div className='w-2/12 h-[93vh] max-md:hidden'>Third</div>
+                    <div className='w-2/12 h-[93vh] max-md:hidden bg-black'>Third</div>
                 </div>:null}
             </>
         );

@@ -23,13 +23,14 @@ function Signup_comp({ toggleAuth }) {
     e.preventDefault();
     let user={name:userName.value,phone:phoneNumber.value,password:password.value};
     let result =await axios.post('http://localhost:3000/auth/register',{user});
+    console.log(result)
     if(result.data.token){
       Cookies.set('authToken',JSON.stringify(result.data.token),{expires:7});
       Cookies.set('user',JSON.stringify(result.data.user),{expires:7});
       console.log("Woring Signup");
       setLogin(true);
       setUser(result.data.user);
-      return redirect('/chat');
+      return redirect('/chat');   
     }
     console.log(yourAvatar);
       console.log("Error during Signup");
